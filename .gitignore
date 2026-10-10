@@ -1,0 +1,5 @@
+node_modules
+.dev.vars
+.wrangler
+.tokens.b64
+wrangler.private.jsonc
