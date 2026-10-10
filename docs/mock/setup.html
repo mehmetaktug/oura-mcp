@@ -1,0 +1,17 @@
+<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="style.css">
+<style>.modal{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:28px 30px}
+h2{font-size:24px;margin-bottom:6px}.sub{color:var(--mute);margin-bottom:20px}
+label{display:block;color:var(--mute);font-size:13px;margin:14px 0 6px}
+.field{background:#0b1226;border:1px solid var(--line);border-radius:10px;padding:11px 14px;font:14px ui-monospace,Menlo,monospace;color:#cbd5ff;word-break:break-all}
+.radio{display:flex;align-items:center;gap:10px;padding:10px 0;color:var(--text)}.r{width:18px;height:18px;border-radius:50%;border:2px solid var(--mute)}.r.on{border-color:var(--violet);background:radial-gradient(circle,var(--violet) 45%,transparent 50%)}
+.btns{display:flex;justify-content:flex-end;gap:10px;margin-top:24px}.btn{border-radius:10px;padding:10px 20px;font-weight:600}.b1{background:#1c2542}.b2{background:#fff;color:#0b1020}
+.step{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:var(--violet);color:#0b1020;font-weight:800;font-size:14px;margin-right:10px}
+.s{display:flex;align-items:center;margin-bottom:14px;color:var(--text)}</style>
+<div class="s"><span class="step">1</span>Open Settings, Connectors, Add custom connector</div>
+<div class="modal"><h2>Add custom connector</h2><div class="sub">Connect your assistant to your data and tools.</div>
+<label>Name</label><div class="field">Oura Ring</div>
+<label>Remote MCP server URL</label><div class="field">https://oura-mcp.&lt;your-subdomain&gt;.workers.dev/&lt;MCP_SECRET&gt;/mcp</div>
+<label>Authentication</label>
+<div class="radio"><span class="r"></span>Sign in now</div><div class="radio"><span class="r"></span>Sign in when needed</div><div class="radio"><span class="r on"></span><b>No sign-in</b>&nbsp;<span style="color:var(--mute)">the secret is in the URL</span></div>
+<div class="btns"><span class="btn b1">Back</span><span class="btn b2">Add</span></div></div>
+<div class="note">Illustrative example. Replace the placeholders with your own values.</div>

@@ -58,6 +58,21 @@ flowchart LR
 - 🧰 **Raw data plus smart tools.** `oura_data` reads 19 collections, and four analysis tools do the maths for you.
 - ✅ **Tested.** The analysis code is pure functions with a unit test suite that runs in CI on every push.
 
+## 📸 See it in action
+
+<table>
+<tr>
+<td width="50%"><img src="assets/screenshot-sleep.png" alt="Asking about sleep debt"></td>
+<td width="50%"><img src="assets/screenshot-weekly.png" alt="Comparing this week with last week"></td>
+</tr>
+<tr>
+<td align="center"><sub>"How much sleep debt do I have?"</sub></td>
+<td align="center"><sub>"Am I doing better than last week?"</sub></td>
+</tr>
+</table>
+
+<sub>Illustrative examples with sample data. Your own numbers come live from your ring.</sub>
+
 ## 🧠 Smart tools
 
 You do not have to ask Claude to crunch raw JSON. These tools return ready-made answers:
@@ -127,6 +142,8 @@ https://<your-worker-host>/<MCP_SECRET>/login
 ```
 https://<your-worker-host>/<MCP_SECRET>/mcp
 ```
+
+<img src="assets/screenshot-setup.png" alt="Add custom connector dialog" width="720">
 
 That is it. Start a new chat and ask about your sleep. 🎉
 

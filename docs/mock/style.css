@@ -1,0 +1,23 @@
+:root{--bg:#0b1020;--panel:#12182c;--line:#232b47;--text:#e6e9f5;--mute:#8d96b5;--violet:#a78bfa;--cyan:#22d3ee;--green:#34d399;--amber:#fbbf24;--red:#f87171}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--text);font:16px/1.5 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;width:1100px;padding:28px}
+.win{background:var(--panel);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+.bar{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid var(--line);color:var(--mute);font-size:13px}
+.dot{width:11px;height:11px;border-radius:50%}
+.chat{padding:26px 28px;display:flex;flex-direction:column;gap:20px}
+.user{align-self:flex-end;background:#1c2542;border:1px solid var(--line);border-radius:16px 16px 4px 16px;padding:12px 18px;max-width:70%}
+.ai{max-width:92%}
+.tool{display:inline-flex;align-items:center;gap:8px;font:13px ui-monospace,Menlo,monospace;color:var(--cyan);background:#0e2230;border:1px solid #17445a;border-radius:999px;padding:5px 12px;margin-bottom:12px}
+.tool b{color:#fff;font-weight:600}
+.ai p{margin:0 0 12px}
+table{border-collapse:collapse;width:100%;margin:6px 0 14px;font-size:15px}
+th{color:var(--mute);font-weight:600;text-align:left;font-size:12px;letter-spacing:.06em;text-transform:uppercase;padding:8px 10px;border-bottom:1px solid var(--line)}
+td{padding:9px 10px;border-bottom:1px solid #1a2240}
+td.n{font-variant-numeric:tabular-nums}
+.up{color:var(--green)}.down{color:var(--red)}.flat{color:var(--mute)}
+.chip{display:inline-block;border-radius:999px;padding:2px 10px;font-size:13px;font-weight:600}
+.c-g{background:#0f2f26;color:var(--green)}.c-a{background:#33290e;color:var(--amber)}.c-r{background:#3a1717;color:var(--red)}
+.bar-bg{height:8px;background:#1a2240;border-radius:6px;width:160px;display:inline-block;vertical-align:middle;margin-left:8px;overflow:hidden}
+.bar-fg{display:block;height:100%;border-radius:6px}
+.note{color:var(--mute);font-size:12.5px;margin-top:14px;text-align:center}
+.ul{margin:6px 0 12px 20px}.ul li{margin:4px 0}
