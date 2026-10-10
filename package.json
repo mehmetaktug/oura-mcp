@@ -3,6 +3,25 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "scripts": { "dev": "wrangler dev", "deploy": "wrangler deploy" },
-  "devDependencies": { "wrangler": "^4" }
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "^4"
+  },
+  "description": "Remote MCP server for Oura Ring data on Cloudflare Workers",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mehmetaktug/oura-mcp.git"
+  },
+  "keywords": [
+    "oura",
+    "mcp",
+    "model-context-protocol",
+    "cloudflare-workers",
+    "claude",
+    "health"
+  ]
 }
