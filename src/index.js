@@ -1,42 +1,10 @@
 // Oura Ring MCP server as a Cloudflare Worker (streamable HTTP, stateless JSON).
 // Public URL: https://<host>/<MCP_SECRET>/mcp   (anything else returns 404)
 import { DurableObject } from "cloudflare:workers";
+import { COLLECTIONS, handleRpc, rpcError } from "./tools.js";
 
 const API = "https://api.ouraring.com";
 const TOKEN_URL = "https://api.ouraring.com/oauth/token";
-
-const DAILY = [
-  "daily_sleep", "daily_readiness", "daily_activity", "daily_stress", "daily_resilience",
-  "daily_spo2", "daily_cardiovascular_age", "sleep", "sleep_time", "workout", "session",
-  "tag", "enhanced_tag", "rest_mode_period", "vO2_max",
-];
-const COLLECTIONS = [...DAILY, "heartrate", "ring_battery_level", "ring_configuration", "personal_info"];
-
-const TOOL = {
-  name: "oura_data",
-  description:
-    "Fetch data from the Oura Ring API v2.\n" +
-    "Pick a `collection`.\n" +
-    "- Daily collections use `start_date`/`end_date` (YYYY-MM-DD). If both are omitted the last 7 days are returned.\n" +
-    "- heartrate and ring_battery_level use `start_datetime`/`end_datetime` (ISO-8601). If omitted the last 24 hours are returned.\n" +
-    "- personal_info and ring_configuration take no dates.\n" +
-    "- `document_id` fetches a single record. Use `next_token` from a previous reply to page through large results.",
-  inputSchema: {
-    type: "object",
-    properties: {
-      collection: { type: "string", enum: COLLECTIONS },
-      start_date: { type: "string", description: "YYYY-MM-DD" },
-      end_date: { type: "string", description: "YYYY-MM-DD" },
-      start_datetime: { type: "string", description: "ISO-8601" },
-      end_datetime: { type: "string", description: "ISO-8601" },
-      document_id: { type: "string" },
-      next_token: { type: "string" },
-    },
-    required: ["collection"],
-    additionalProperties: false,
-  },
-  annotations: { readOnlyHint: true, openWorldHint: true, title: "Oura Ring data" },
-};
 
 // ---- Token store: one Durable Object so the single-use refresh token is rotated safely ----
 export class TokenStore extends DurableObject {
@@ -91,62 +59,38 @@ export class TokenStore extends DurableObject {
   }
 }
 
-// ---- Oura call ----
-async function ouraData(env, args) {
-  const c = args.collection;
-  if (!COLLECTIONS.includes(c)) throw new Error(`Unknown collection: ${c}`);
-  const token = await env.TOKENS.get(env.TOKENS.idFromName("main")).accessToken();
-
-  let path = `/v2/usercollection/${c}`;
-  const q = new URLSearchParams();
-  if (args.document_id) path += `/${encodeURIComponent(args.document_id)}`;
-  else if (c !== "personal_info" && c !== "ring_configuration") {
-    if (c === "heartrate" || c === "ring_battery_level") {
-      q.set("start_datetime", args.start_datetime ?? new Date(Date.now() - 864e5).toISOString());
-      q.set("end_datetime", args.end_datetime ?? new Date().toISOString());
-    } else {
-      const day = (d) => d.toISOString().slice(0, 10);
-      q.set("start_date", args.start_date ?? day(new Date(Date.now() - 7 * 864e5)));
-      q.set("end_date", args.end_date ?? day(new Date(Date.now() + 864e5)));
-    }
-    if (args.next_token) q.set("next_token", args.next_token);
-  }
-  const res = await fetch(`${API}${path}${q.size ? "?" + q : ""}`, { headers: { authorization: `Bearer ${token}` } });
-  const text = await res.text();
-  if (!res.ok) throw new Error(`Oura API ${res.status}: ${text.slice(0, 500)}`);
-  return text;
-}
-
-// ---- MCP (JSON-RPC over POST) ----
-const ok = (id, result) => ({ jsonrpc: "2.0", id, result });
-const err = (id, code, message) => ({ jsonrpc: "2.0", id, error: { code, message } });
-
-async function handle(env, msg) {
-  const { id, method, params } = msg;
-  if (id === undefined) return null; // notification
-  switch (method) {
-    case "initialize":
-      return ok(id, {
-        protocolVersion: params?.protocolVersion ?? "2025-03-26",
-        capabilities: { tools: {} },
-        serverInfo: { name: "oura-mcp-worker", version: "1.0.0" },
-      });
-    case "ping":
-      return ok(id, {});
-    case "tools/list":
-      return ok(id, { tools: [TOOL] });
-    case "tools/call": {
-      if (params?.name !== TOOL.name) return err(id, -32602, `Unknown tool: ${params?.name}`);
-      try {
-        const text = await ouraData(env, params.arguments ?? {});
-        return ok(id, { content: [{ type: "text", text }] });
-      } catch (e) {
-        return ok(id, { isError: true, content: [{ type: "text", text: String(e.message ?? e) }] });
+// ---- Oura API access (injected into the tools) ----
+function makeApi(env) {
+  const bearer = async () => env.TOKENS.get(env.TOKENS.idFromName("main")).accessToken();
+  const getText = async (path, params) => {
+    const q = new URLSearchParams(params);
+    const res = await fetch(`${API}${path}${q.size ? "?" + q : ""}`, { headers: { authorization: `Bearer ${await bearer()}` } });
+    const text = await res.text();
+    if (!res.ok) throw new Error(`Oura API ${res.status}: ${text.slice(0, 500)}`);
+    return text;
+  };
+  return {
+    get: async (path, params = {}) => JSON.parse(await getText(path, params)),
+    raw: (args) => {
+      const c = args.collection;
+      if (!COLLECTIONS.includes(c)) throw new Error(`Unknown collection: ${c}`);
+      let path = `/v2/usercollection/${c}`;
+      const q = {};
+      if (args.document_id) path += `/${encodeURIComponent(args.document_id)}`;
+      else if (c !== "personal_info" && c !== "ring_configuration") {
+        if (c === "heartrate" || c === "ring_battery_level") {
+          q.start_datetime = args.start_datetime ?? new Date(Date.now() - 864e5).toISOString();
+          q.end_datetime = args.end_datetime ?? new Date().toISOString();
+        } else {
+          const day = (d) => d.toISOString().slice(0, 10);
+          q.start_date = args.start_date ?? day(new Date(Date.now() - 7 * 864e5));
+          q.end_date = args.end_date ?? day(new Date(Date.now() + 864e5));
+        }
+        if (args.next_token) q.next_token = args.next_token;
       }
-    }
-    default:
-      return err(id, -32601, `Method not found: ${method}`);
-  }
+      return getText(path, q);
+    },
+  };
 }
 
 const SCOPES = "email personal daily heartrate tag workout session spo2 ring_configuration stress heart_health";
@@ -224,13 +168,14 @@ export default {
     if (req.method !== "POST") return new Response("Method not allowed", { status: 405 });
 
     let body;
-    try { body = await req.json(); } catch { return Response.json(err(null, -32700, "Parse error"), { status: 400 }); }
+    try { body = await req.json(); } catch { return Response.json(rpcError(null, -32700, "Parse error"), { status: 400 }); }
+    const api = makeApi(env);
     const headers = { "content-type": "application/json" };
     if (Array.isArray(body)) {
-      const out = (await Promise.all(body.map((m) => handle(env, m)))).filter(Boolean);
+      const out = (await Promise.all(body.map((m) => handleRpc(m, api)))).filter(Boolean);
       return out.length ? new Response(JSON.stringify(out), { headers }) : new Response(null, { status: 202 });
     }
-    const out = await handle(env, body);
+    const out = await handleRpc(body, api);
     return out ? new Response(JSON.stringify(out), { headers }) : new Response(null, { status: 202 });
   },
 };

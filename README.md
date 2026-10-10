@@ -9,6 +9,7 @@ No laptop left on. No server to babysit. Free to host.
 
 [![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/mehmetaktug/oura-mcp)
 
+[![CI](https://img.shields.io/github/actions/workflow/status/mehmetaktug/oura-mcp/ci.yml?branch=main&style=for-the-badge&label=tests)](https://github.com/mehmetaktug/oura-mcp/actions/workflows/ci.yml)
 ![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)
 ![Cloudflare Workers](https://img.shields.io/badge/Cloudflare-Workers-F38020?style=for-the-badge&logo=cloudflare&logoColor=white)
 ![MCP](https://img.shields.io/badge/protocol-MCP-7C3AED?style=for-the-badge)
@@ -32,7 +33,10 @@ Ask in plain language. Claude pulls the numbers straight from your ring and answ
 | 🗣️ You ask | 🔍 It reads |
 |---|---|
 | "Show my sleep and readiness for the last 7 days" | `daily_sleep`, `daily_readiness` |
-| "Is my HRV trending up or down this month?" | `sleep` |
+| "How much sleep debt do I have?" | `sleep_summary` |
+| "Am I doing better than last week?" | `weekly_comparison` |
+| "Is my HRV trending up or down this month?" | `hrv_trend` |
+| "Why is my readiness lower than usual?" | `readiness_drivers` |
 | "Did that late workout hurt my sleep?" | `workout`, `daily_sleep` |
 | "What was my resting heart rate last night?" | `sleep`, `heartrate` |
 | "How stressed was I on Monday?" | `daily_stress` |
@@ -51,10 +55,22 @@ flowchart LR
 - 🏠 **Your own deployment.** It runs in *your* Cloudflare account with *your* Oura API app. Your health data never passes through anyone else's server.
 - 🔒 **Read only.** The server never writes anything to your Oura account.
 - 🔁 **Safe token rotation.** Oura refresh tokens are single use. One Durable Object rotates them, so concurrent requests cannot break your login.
-- 🧰 **One tool, 19 collections.** `oura_data` covers everything below.
+- 🧰 **Raw data plus smart tools.** `oura_data` reads 19 collections, and four analysis tools do the maths for you.
+- ✅ **Tested.** The analysis code is pure functions with a unit test suite that runs in CI on every push.
+
+## 🧠 Smart tools
+
+You do not have to ask Claude to crunch raw JSON. These tools return ready-made answers:
+
+| Tool | What it answers |
+|---|---|
+| `sleep_summary` | Night by night score, hours, efficiency, HRV and lowest heart rate, with averages, best and worst night, and **sleep debt** against your target (default 7.5 h) |
+| `weekly_comparison` | **This week vs last week** for sleep, readiness, activity and steps, with change and percent change |
+| `hrv_trend` | Nightly HRV, rolling average, min and max, and whether you are **trending up, down or flat** |
+| `readiness_drivers` | What is **helping or dragging** today's readiness: the three weakest and three strongest contributors |
 
 <details>
-<summary><b>📚 All supported collections</b></summary>
+<summary><b>📚 All supported collections (raw tool)</b></summary>
 
 | Group | Collections |
 |---|---|
@@ -128,6 +144,7 @@ That is it. Start a new chat and ask about your sleep. 🎉
 ```sh
 cp .dev.vars.example .dev.vars   # fill in the values
 npx wrangler dev
+npm test                          # run the unit tests
 ```
 
 Use `http://localhost:8787/callback` as an extra redirect URI in your Oura app while testing.
@@ -143,7 +160,7 @@ Use `http://localhost:8787/callback` as an extra redirect URI in your Oura app w
 
 ## 🗺️ Ideas for contributions
 
-- Smart analysis tools: sleep debt, HRV trends, period comparisons
+- More analysis tools: correlations with tags, anomaly detection, stress and recovery balance
 - Optional API key header authentication
 - Webhook support for push updates
 - Response trimming for token efficiency
