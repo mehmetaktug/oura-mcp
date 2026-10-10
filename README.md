@@ -1,8 +1,8 @@
 <div align="center">
 
-# 💍 oura-mcp
+<img src="assets/banner.svg" alt="oura-mcp: talk to your Oura Ring from anywhere with any AI" width="100%">
 
-### Talk to your Oura Ring. From anywhere. With any AI.
+<br>
 
 A remote [MCP](https://modelcontextprotocol.io) server that plugs your **Oura Ring** data into Claude, running on **Cloudflare Workers**.
 No laptop left on. No server to babysit. Free to host.
@@ -24,6 +24,10 @@ No laptop left on. No server to babysit. Free to host.
 > *"How did I sleep this week, and what is dragging my readiness down?"*
 
 Ask in plain language. Claude pulls the numbers straight from your ring and answers.
+
+<div align="center">
+<img src="assets/rings.svg" alt="Animated Sleep, Readiness and Activity rings" width="640">
+</div>
 
 | 🗣️ You ask | 🔍 It reads |
 |---|---|
@@ -149,6 +153,8 @@ PRs and issues are welcome. ⭐ If this is useful to you, a star helps others fi
 ## ⚖️ Disclaimer
 
 Unofficial community project. Not affiliated with or endorsed by Oura. Your data is yours: use at your own risk and never share your secret URL.
+
+You run your own copy with your own Oura API app, so you are responsible for following the [Oura API and MCP Agreement](https://cloud.ouraring.com/legal/api-agreement) and applicable privacy laws.
 
 ## 📄 License
 

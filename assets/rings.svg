@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 320" width="760" height="320" role="img" aria-label="Animated Sleep, Readiness and Activity rings with example values">
+  <defs>
+    <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8b5cf6"/><stop offset="1" stop-color="#c4b5fd"/></linearGradient>
+    <linearGradient id="g2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset="1" stop-color="#67e8f9"/></linearGradient>
+    <linearGradient id="g3" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#10b981"/><stop offset="1" stop-color="#6ee7b7"/></linearGradient>
+  </defs>
+  <style>
+    .t { font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; }
+  </style>
+  <rect width="760" height="320" rx="24" fill="#0f1426"/>
+
+  <g transform="translate(170 160) rotate(-90)">
+    <!-- tracks -->
+    <circle r="110" fill="none" stroke="#1d2540" stroke-width="22"/>
+    <circle r="82"  fill="none" stroke="#1d2540" stroke-width="22"/>
+    <circle r="54"  fill="none" stroke="#1d2540" stroke-width="22"/>
+    <!-- Sleep 78%: C=691.2 -> offset 152.1 -->
+    <circle r="110" fill="none" stroke="url(#g1)" stroke-width="22" stroke-linecap="round" stroke-dasharray="691.2" stroke-dashoffset="152.1">
+      <animate attributeName="stroke-dashoffset" values="691.2;152.1;152.1;691.2" keyTimes="0;0.35;0.85;1" dur="6s" repeatCount="indefinite" calcMode="spline" keySplines="0.2 0.8 0.2 1;0 0 1 1;0.4 0 0.2 1"/>
+    </circle>
+    <!-- Readiness 85%: C=515.2 -> offset 77.3 -->
+    <circle r="82" fill="none" stroke="url(#g2)" stroke-width="22" stroke-linecap="round" stroke-dasharray="515.2" stroke-dashoffset="77.3">
+      <animate attributeName="stroke-dashoffset" values="515.2;77.3;77.3;515.2" keyTimes="0;0.4;0.85;1" dur="6s" repeatCount="indefinite" calcMode="spline" keySplines="0.2 0.8 0.2 1;0 0 1 1;0.4 0 0.2 1"/>
+    </circle>
+    <!-- Activity 92%: C=339.3 -> offset 27.1 -->
+    <circle r="54" fill="none" stroke="url(#g3)" stroke-width="22" stroke-linecap="round" stroke-dasharray="339.3" stroke-dashoffset="27.1">
+      <animate attributeName="stroke-dashoffset" values="339.3;27.1;27.1;339.3" keyTimes="0;0.45;0.85;1" dur="6s" repeatCount="indefinite" calcMode="spline" keySplines="0.2 0.8 0.2 1;0 0 1 1;0.4 0 0.2 1"/>
+    </circle>
+  </g>
+
+  <g class="t" fill="#e2e8f0">
+    <text x="360" y="92" font-size="26" font-weight="700" fill="#ffffff">What Claude can see</text>
+
+    <circle cx="372" cy="138" r="9" fill="#a78bfa"/>
+    <text x="392" y="146" font-size="22" font-weight="600">Sleep</text>
+    <text x="700" y="146" font-size="26" font-weight="800" text-anchor="end" fill="#c4b5fd">78</text>
+
+    <circle cx="372" cy="188" r="9" fill="#22d3ee"/>
+    <text x="392" y="196" font-size="22" font-weight="600">Readiness</text>
+    <text x="700" y="196" font-size="26" font-weight="800" text-anchor="end" fill="#67e8f9">85</text>
+
+    <circle cx="372" cy="238" r="9" fill="#34d399"/>
+    <text x="392" y="246" font-size="22" font-weight="600">Activity</text>
+    <text x="700" y="246" font-size="26" font-weight="800" text-anchor="end" fill="#6ee7b7">92</text>
+
+    <text x="360" y="288" font-size="14" fill="#94a3b8">Example values for illustration. Yours come live from your ring.</text>
+  </g>
+</svg>

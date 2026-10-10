@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 380" width="1200" height="380" role="img" aria-label="oura-mcp: talk to your Oura Ring from anywhere with any AI">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0a0e1a"/>
+      <stop offset="1" stop-color="#151b33"/>
+    </linearGradient>
+    <linearGradient id="ring" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#8b5cf6"/>
+      <stop offset="0.5" stop-color="#22d3ee"/>
+      <stop offset="1" stop-color="#34d399"/>
+    </linearGradient>
+    <linearGradient id="title" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#a5b4fc"/>
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="9" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <radialGradient id="halo" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#22d3ee" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#22d3ee" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="380" rx="24" fill="url(#bg)"/>
+
+  <!-- soft pulsing halo behind the ring -->
+  <circle cx="250" cy="180" r="170" fill="url(#halo)">
+    <animate attributeName="r" values="150;185;150" dur="4s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.6;1;0.6" dur="4s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- the ring -->
+  <g transform="translate(250 180)">
+    <circle r="96" fill="none" stroke="#1d2540" stroke-width="40"/>
+    <circle r="96" fill="none" stroke="url(#ring)" stroke-width="40" stroke-linecap="round"
+            stroke-dasharray="430 173" filter="url(#glow)">
+      <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="9s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="115" fill="none" stroke="#ffffff" stroke-opacity="0.10" stroke-width="2"/>
+    <circle r="77" fill="none" stroke="#ffffff" stroke-opacity="0.10" stroke-width="2"/>
+    <!-- inner sensor dots, like the real ring -->
+    <g fill="#0a0e1a" stroke="#34d399" stroke-width="2">
+      <circle cx="-22" cy="68" r="5"/><circle cx="0" cy="72" r="5"/><circle cx="22" cy="68" r="5"/>
+    </g>
+    <!-- orbiting data points -->
+    <g>
+      <animateTransform attributeName="transform" type="rotate" from="0" to="-360" dur="14s" repeatCount="indefinite"/>
+      <circle cx="0" cy="-150" r="6" fill="#a78bfa"/>
+      <circle cx="130" cy="75" r="4.5" fill="#22d3ee"/>
+      <circle cx="-120" cy="90" r="4" fill="#34d399"/>
+    </g>
+  </g>
+
+  <!-- title -->
+  <text x="470" y="170" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif"
+        font-size="92" font-weight="800" fill="url(#title)" letter-spacing="-2">oura-mcp</text>
+  <text x="472" y="218" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif"
+        font-size="27" fill="#c7d2fe">Talk to your Oura Ring. From anywhere. With any AI.</text>
+
+  <!-- chips -->
+  <g font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="18" font-weight="600" fill="#e2e8f0">
+    <rect x="472" y="246" width="78" height="38" rx="19" fill="#7c3aed" fill-opacity="0.35" stroke="#8b5cf6"/>
+    <text x="511" y="271" text-anchor="middle">MCP</text>
+    <rect x="562" y="246" width="204" height="38" rx="19" fill="#f38020" fill-opacity="0.25" stroke="#f38020"/>
+    <text x="664" y="271" text-anchor="middle">Cloudflare Workers</text>
+    <rect x="778" y="246" width="126" height="38" rx="19" fill="#10b981" fill-opacity="0.25" stroke="#34d399"/>
+    <text x="841" y="271" text-anchor="middle">Read only</text>
+    <rect x="916" y="246" width="132" height="38" rx="19" fill="#22d3ee" fill-opacity="0.2" stroke="#22d3ee"/>
+    <text x="982" y="271" text-anchor="middle">Free tier</text>
+  </g>
+
+  <!-- heartbeat line -->
+  <path d="M470 335 H620 L640 335 L655 305 L675 360 L692 322 L705 335 H1150" fill="none" stroke="#34d399" stroke-width="3"
+        stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="700" stroke-dashoffset="700" opacity="0.9">
+    <animate attributeName="stroke-dashoffset" values="700;0;0;-700" keyTimes="0;0.45;0.6;1" dur="5s" repeatCount="indefinite"/>
+  </path>
+</svg>
